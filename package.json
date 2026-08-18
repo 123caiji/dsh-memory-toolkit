@@ -1,0 +1,32 @@
+{
+  "name": "dsh-memory-toolkit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Memory and token-optimization plugin toolkit for DeepSeek Harness: cross-session knowledge graph memory + five-layer token-saving orchestration.",
+  "author": "123caiji",
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "cordis",
+    "agent-memory",
+    "token-optimization",
+    "knowledge-graph"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/123caiji/dsh-memory-toolkit.git"
+  },
+  "homepage": "https://github.com/123caiji/dsh-memory-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/123caiji/dsh-memory-toolkit/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "clean": "pnpm -r exec rm -rf dist lib tsconfig.tsbuildinfo"
+  }
+}

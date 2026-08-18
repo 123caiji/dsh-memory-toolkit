@@ -1,0 +1,61 @@
+{
+  "name": "@123caiji/dsh-graph-memory",
+  "version": "1.6.0-beta.1",
+  "description": "Cross-session knowledge graph memory for DeepSeek Harness — typed nodes, causal relations, PageRank, communities, and dual-path recall (vector + FTS5).",
+  "author": "123caiji",
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "cordis",
+    "agent-memory",
+    "knowledge-graph",
+    "sqlite",
+    "cross-session"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/123caiji/dsh-memory-toolkit.git",
+    "directory": "packages/graph-memory"
+  },
+  "homepage": "https://github.com/123caiji/dsh-memory-toolkit/tree/main/packages/graph-memory#readme",
+  "bugs": {
+    "url": "https://github.com/123caiji/dsh-memory-toolkit/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dsh.ts",
+    "./dsh": "./dsh.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dsh.ts",
+    "index.ts",
+    "src",
+    "cordis.patch.yml",
+    "README.md",
+    "README_CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@photostructure/sqlite": "^1.0.0",
+    "@sinclair/typebox": "^0.34.48"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.7.2",
+    "vitest": "^1.4.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+- insert:
+    - id: lean-context
+      name: '@123caiji/dsh-lean-context'
+      config:
+        # Five orthogonally-layered token-saving capabilities. Each layer is
+        # independently toggled so a deployment can adopt them incrementally.
+        # Defaults enable the low-risk layers (discipline + audit) and leave
+        # the higher-impact ones off until they are explicitly configured.
+        discipline:
+          enabled: true       # systemPrompt 纪律层：六模式决策表 + 行为约束
+        convergence:
+          enabled: false      # MCP schema 收敛（需配置 servers）
+          servers: []
+          cachePath: !!js "dshHomePath('lean-context/mcp-catalog.json')"
+          searchLimitDefault: 5
+          searchLimitMax: 10
+          allowTools: []      # fail-closed；形如 "server/tool" 的 glob
+          denyTools: []
+        routing:
+          enabled: false      # 模型路由：简单问题 flash 直答
+          flashModel: ''
+          flashCredential: ''
+          fallbackOnFailure: true
+        audit:
+          enabled: true       # 只读上下文审计
+          cacheSeconds: 60
+        rebuild:
+          enabled: false      # agent loop 重建（高风险，需单独验证）
+          maxSliceTokens: 32000

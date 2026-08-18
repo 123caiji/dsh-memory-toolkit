@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+lib/
+*.tsbuildinfo
+*.d.ts.map
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Environment and secrets
+.env
+.env.local
+*.pem
+*.key
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# DSH runtime data (local DBs, caches)
+.dsh-tmp/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
