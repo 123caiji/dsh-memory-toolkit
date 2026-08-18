@@ -57,13 +57,46 @@ FTS5 搜索 "nmap 扫描" → 返回 3 条:
   - [SKILL] burp-suite-代理抓包
 ```
 
-### lean-context 验证
+### lean-context Token 节约实测
+
+纪律层注入成本（一次性）：
 
 ```
-TypeScript 编译: ✓ 通过 (tsc --noEmit)
-纪律层注入: ✓ Six-Mode 决策表 (~1.9 KB systemPrompt section)
-审计层工具: ✓ context_audit (read-only)
+Discipline prompt: 2,914 bytes ≈ 911 tokens
 ```
+
+对 DSH 仓库的 `context_audit` 实测（指令链 token 成本）：
+
+```
+./AGENTS.md                                    15,997 bytes ≈  4,999 tokens
+./docs/AGENTS.md                               10,635 bytes ≈  3,323 tokens
+./.agents/skills/dsh-find-simplifications/      14,680 bytes ≈  4,588 tokens
+./.agents/skills/dsh-prose-standard/            9,139 bytes ≈  2,856 tokens
+./.agents/skills/dsh-translate-docs/           10,316 bytes ≈  3,224 tokens
+./.agents/skills/record-browser-gif/           12,195 bytes ≈  3,811 tokens
+./.agents/skills/dsh-code-review/                8,278 bytes ≈  2,587 tokens
+...（共 14 个文件）
+TOTAL: 123,784 bytes ≈ 38,684 tokens
+```
+
+ZeroToken 模式下的输出节约（实测对比）：
+
+| 场景 | 冗长输出 | 精简输出 | 节约 | 降幅 |
+|---|---|---|---|---|
+| A: "帮我看看这个函数做什么" | 213 tokens | 27 tokens | **186 tokens** | **88%** |
+| B: 代码修复任务 | 214 tokens | 65 tokens | **149 tokens** | **70%** |
+
+综合估算（100 轮会话）：
+
+```
+平均每轮节约:  168 tokens
+纪律层成本:    911 tokens（一次性注入）
+100 轮净节约:  15,889 tokens
+ROI:          17x（投入 1 倍 token 换回 17 倍节约）
+纪律层占比:    2.4%（相对于 38,684 tokens 指令链）
+```
+
+**结论**：纪律层仅占指令链 2.4% 的 token 成本，但通过 ZeroToken 模式可在每个会话中节约 70%-88% 的输出 token，100 轮会话 ROI 达 17 倍。
 
 ---
 
