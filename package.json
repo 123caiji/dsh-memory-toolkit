@@ -28,5 +28,8 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "clean": "pnpm -r exec rm -rf dist lib tsconfig.tsbuildinfo"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.12"
   }
 }

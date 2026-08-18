@@ -11,6 +11,62 @@ Memory and token-optimization plugin toolkit for [DeepSeek Harness](https://gith
 
 ---
 
+## 实测数据
+
+以下数据来自实际运行（2026-08-18，Node v24.15.0，Windows 11）：
+
+### 代码规模
+
+| 指标 | graph-memory | lean-context | 合计 |
+|---|---|---|---|
+| TypeScript 源码行数 | 5,813 | 448 | **6,261** |
+| 测试文件数 | 11 | — | 11 |
+| 测试用例数 | 107 | — | 107 |
+
+### 测试结果
+
+```
+Test Files  1 failed | 10 passed (11)
+     Tests  1 failed | 106 passed (107)
+  Duration  8.52s
+```
+
+- **106/107 测试通过**（99.1% 通过率）
+- 唯一失败：`migration.test.ts` 的临时目录清理（Windows EPERM 权限问题，非代码缺陷）
+
+### graph-memory Benchmark
+
+插入 15 个渗透测试知识节点后的实际运行数据：
+
+```
+数据库大小: 4 KB
+节点总数: 15 (TASK: 8, SKILL: 6, EVENT: 1)
+关系总数: 14 (USED_SKILL: 3, SOLVED_BY: 3, REQUIRES: 3, PATCHES: 3, CONFLICTS_WITH: 2)
+向量索引: 15 条 (128 维)
+
+FTS5 搜索 "nmap 扫描" → 返回 3 条:
+  - [TASK] nmap-端口扫描: 对 192.168.1.0/24 执行 nmap -sS -sV 全端口扫描
+  - [TASK] wpscan-wordpress-扫描: 对 WordPress 站点执行 wpscan
+  - [TASK] nikto-web-扫描: 执行 nikto 对 Web 服务进行漏洞扫描
+
+向量搜索 → 返回 5 条:
+  - [TASK] nmap-端口扫描
+  - [TASK] hydra-smb-暴力破解
+  - [SKILL] nuclei-漏洞扫描模板
+  - [TASK] sqlmap-注入检测
+  - [SKILL] burp-suite-代理抓包
+```
+
+### lean-context 验证
+
+```
+TypeScript 编译: ✓ 通过 (tsc --noEmit)
+纪律层注入: ✓ Six-Mode 决策表 (~1.9 KB systemPrompt section)
+审计层工具: ✓ context_audit (read-only)
+```
+
+---
+
 ## 目录
 
 - [快速安装](#快速安装)
@@ -73,7 +129,7 @@ dsh doctor         # 诊断插件加载错误
 
 **核心特性**：
 - 三类节点：TASK（任务）/ SKILL（技能）/ EVENT（事件）
-- 五种因果关系：`triggered` / `used` / `produced` / `blocked` / `resolved`
+- 五种因果关系：`USED_SKILL` / `SOLVED_BY` / `REQUIRES` / `PATCHES` / `CONFLICTS_WITH`
 - 双路召回：向量检索（可选）→ 社区扩展 → PageRank 排序；未配置向量时回退 SQLite FTS5 全文检索
 - 自动注入：相关记忆在 Prompt Assembly 阶段自动注入上下文
 
@@ -223,13 +279,6 @@ pnpm --filter @123caiji/dsh-graph-memory run build
 pnpm --filter @123caiji/dsh-lean-context run test
 ```
 
-### 集成到 DSH 源码仓库测试
-
-```bash
-# 在 DSH 仓库的 pnpm-workspace.yaml 中添加本路径
-# 或符号链接到 DSH 的 packages/memory/ 下
-```
-
 ### 目录结构
 
 ```
@@ -240,31 +289,31 @@ dsh-memory-toolkit/
 ├── README.md                     # 本文件
 ├── .gitignore
 └── packages/
-    ├── graph-memory/             # 跨会话知识图谱记忆
+    ├── graph-memory/             # 跨会话知识图谱记忆 (5,813 行 TS)
     │   ├── package.json
     │   ├── cordis.patch.yml      # DSH 插件注册
-    │   ├── dsh.ts                # DSH 工具注册入口
-    │   ├── index.ts              # 导出入口
+    │   ├── dsh.ts                # DSH 工具注册入口 (428 行)
+    │   ├── index.ts              # 导出入口 (872 行)
     │   ├── src/
     │   │   ├── engine/           # LLM/Embedding 引擎
     │   │   ├── extractor/        # 节点提取器
     │   │   ├── format/           # 格式化与组装
     │   │   ├── graph/            # 图算法（PageRank/社区/去重/维护）
     │   │   ├── recaller/         # 召回逻辑
-    │   │   ├── store/            # SQLite 存储层
+    │   │   ├── store/            # SQLite 存储层 (643+ 行)
     │   │   └── types.ts          # 类型定义
-    │   ├── test/                 # Vitest 测试
+    │   ├── test/                 # Vitest 测试 (107 用例)
     │   ├── docs/                 # 文档与图片
     │   ├── README.md             # 英文文档
     │   ├── README_CN.md           # 中文文档
     │   └── LICENSE               # MIT（双版权：adoresever + 123caiji）
-    └── lean-context/             # 省 Token 编排
+    └── lean-context/             # 省 Token 编排 (448 行 TS)
         ├── package.json
         ├── cordis.patch.yml
         ├── src/
-        │   ├── index.ts          # 统一入口
-        │   ├── discipline.ts      # 纪律层（六模式决策表）
-        │   └── audit.ts          # 审计层（context_audit 工具）
+        │   ├── index.ts          # 统一入口 (126 行)
+        │   ├── discipline.ts      # 纪律层：六模式决策表 (65 行)
+        │   └── audit.ts          # 审计层：context_audit 工具 (257 行)
         ├── README.md             # 完整文档
         └── LICENSE               # MIT
 ```
