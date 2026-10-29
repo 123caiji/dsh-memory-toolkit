@@ -8,6 +8,12 @@ lib/
 *.tsbuildinfo
 *.d.ts.map
 
+# 例外：两个可发布包把编译产物一并入库，这样用户直接
+# `dsh plugin add github:123caiji/dsh-memory-toolkit#path:/packages/graph-memory`
+# 就能用，不必在本地跑构建（Node 24 不会在 node_modules 里剥离 TS 类型）。
+!/packages/graph-memory/dist/
+!/packages/lean-context/lib/
+
 # Test coverage
 coverage/
 .nyc_output/

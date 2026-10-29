@@ -116,13 +116,16 @@ ROI:          17x（投入 1 倍 token 换回 17 倍节约）
 
 ### 方式 A：从 GitHub 安装（推荐）
 
+> dsh 0.1.x 起，`plugin` 子命令**必须**带 `--profile`。下面示例用 `web`；桌面版通常是 `desktop`，可用 `dsh profile list` 确认。
+
 ```bash
 # 安装整个工具包
-dsh plugin add github:123caiji/dsh-memory-toolkit
+dsh plugin --profile web add github:123caiji/dsh-memory-toolkit
 
-# 或只安装单个插件
-dsh plugin add github:123caiji/dsh-memory-toolkit --subdir packages/graph-memory
-dsh plugin add github:123caiji/dsh-memory-toolkit --subdir packages/lean-context
+# 或只安装单个插件（子包用 #path: 指定，没有 --subdir 这个参数）
+dsh plugin --profile web add 'github:123caiji/dsh-memory-toolkit#path:/packages/graph-memory'
+dsh plugin --profile web add 'github:123caiji/dsh-memory-toolkit#path:/packages/lean-context'
+```
 ```
 
 ### 方式 B：从本地路径安装（开发模式）
@@ -131,10 +134,12 @@ dsh plugin add github:123caiji/dsh-memory-toolkit --subdir packages/lean-context
 git clone https://github.com/123caiji/dsh-memory-toolkit.git
 cd dsh-memory-toolkit
 pnpm install
+pnpm build            # 生成 dist/ 与 lib/；仓库已带编译产物，可跳过
 
 # 从本地路径加载到 DSH
-dsh plugin add ./packages/graph-memory
-dsh plugin add ./packages/lean-context
+dsh plugin --profile web add ./packages/graph-memory
+dsh plugin --profile web add ./packages/lean-context
+```
 ```
 
 ### 方式 C：网页端安装
@@ -148,8 +153,9 @@ dsh plugin add ./packages/lean-context
 ### 验证安装
 
 ```bash
-dsh plugin list    # 确认 graph-memory 和 lean-context 处于 active 状态
-dsh doctor         # 诊断插件加载错误
+dsh plugin --profile web list    # 确认 graph-memory 和 lean-context 处于 active 状态
+dsh doctor                       # 诊断插件加载错误
+```
 ```
 
 ---
@@ -245,9 +251,9 @@ context_audit(cwd=".")
 安装上游插件后在配置中开启：
 
 ```bash
-dsh plugin add github:labmimors/dsh-mcp-lens          # 收敛层
-dsh plugin add github:tianji-qingtian/dsh-model-router # 路由层
-dsh plugin add github:TT-Wang/dsh-slice-agent-loop     # 重建层（高风险，单独验证）
+dsh plugin --profile web add github:labmimors/dsh-mcp-lens          # 收敛层
+dsh plugin --profile web add github:tianji-qingtian/dsh-model-router # 路由层
+dsh plugin --profile web add github:TT-Wang/dsh-slice-agent-loop     # 重建层（高风险，单独验证）
 ```
 
 完整文档见 [packages/lean-context/README.md](packages/lean-context/README.md)。
@@ -358,7 +364,7 @@ dsh-memory-toolkit/
 ### 安装验证
 
 ```bash
-dsh plugin list
+dsh plugin --profile web list
 # graph-memory    active
 # lean-context    active
 ```
@@ -384,6 +390,12 @@ context_audit(cwd=".")
 | 问题 | 原因 | 解决 |
 |---|---|---|
 | `Cannot find module '@photostructure/sqlite'` | native binding 未编译 | `pnpm install` 时确认 allowBuilds 包含该包 |
+| `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING` | 入口是 `.ts`，而 Node 24 不会在 `node_modules` 里剥离类型 | 拉取最新提交（入口已改为 `dist/dsh.js` / `lib/src/index.js`）后重新安装 |
+| `YAMLException: bad indentation of a mapping entry` | 旧版 `cordis.patch.yml` 的 `!!js` 值引号未闭合 | 已修复，拉取最新提交（`!!js` 已移除） |
+| `error: required option '--profile <name>' not specified` | dsh 0.1.x 的 `plugin` 子命令必须带 profile | 命令里加 `--profile web`（或 `desktop`） |
+| `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING` | 入口是 `.ts`，而 Node 24 不会在 node_modules 里剥离类型 | 拉取最新提交（入口已改为 `dist/dsh.js` / `lib/src/index.js`）后重新安装 |
+| `YAMLException: bad indentation of a mapping entry` | 旧版 `cordis.patch.yml` 的 `!!js` 值引号未闭合 | 已修复，拉取最新提交（`!!js` 已移除） |
+| `error: required option '--profile <name>' not specified` | dsh 0.1.x 的 `plugin` 子命令必须带 profile | 命令里加 `--profile web`（或 `desktop`） |
 | `gm_status` 返回 `vectorEnabled: false` | 未配置 embedding 环境变量 | 设置 `GRAPH_MEMORY_EMBEDDING_*` 后重启 DSH |
 | 纪律层未生效 | systemPrompt section 未注入 | 检查 `cordis.patch.yml` 的 `discipline.enabled: true` |
 | 委托层报 `not wired yet` | 上游插件未安装 | 按上文安装 dsh-mcp-lens / dsh-model-router / dsh-slice-agent-loop |
@@ -391,10 +403,11 @@ context_audit(cwd=".")
 ### 排查命令
 
 ```bash
-dsh doctor                # 诊断插件加载错误
-dsh plugin list           # 列出全部插件
-dsh plugin reload         # 重载插件
-dsh plugin remove <name>  # 卸载
+dsh doctor                              # 诊断插件加载错误
+dsh plugin --profile web list           # 列出全部插件
+dsh plugin --profile web reload         # 重载插件
+dsh plugin --profile web remove <name>  # 卸载
+```
 ```
 
 ---

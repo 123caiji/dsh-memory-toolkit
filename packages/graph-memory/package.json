@@ -1,6 +1,6 @@
 {
   "name": "@123caiji/dsh-graph-memory",
-  "version": "1.6.0-beta.1",
+  "version": "1.6.0-beta.2",
   "description": "Cross-session knowledge graph memory for DeepSeek Harness — typed nodes, causal relations, PageRank, communities, and dual-path recall (vector + FTS5).",
   "author": "123caiji",
   "license": "MIT",
@@ -26,14 +26,11 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dsh.ts",
-    "./dsh": "./dsh.ts",
+    ".": "./dist/dsh.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "dsh.ts",
-    "index.ts",
-    "src",
+    "dist",
     "cordis.patch.yml",
     "README.md",
     "README_CN.md",
@@ -42,7 +39,8 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepack": "tsc"
   },
   "dependencies": {
     "@photostructure/sqlite": "^1.0.0",

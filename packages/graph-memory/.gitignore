@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# 编译产物入库：见仓库根 .gitignore 的说明
+!dist/
 *.db
 *.db-wal
 *.db-shm

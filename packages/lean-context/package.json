@@ -1,6 +1,6 @@
 {
   "name": "@123caiji/dsh-lean-context",
-  "version": "0.1.0-rc.5",
+  "version": "0.1.0-rc.6",
   "description": "Token-saving orchestration for DeepSeek Harness: five orthogonally-layered capabilities (discipline, convergence, routing, audit, rebuild), each independently toggled.",
   "author": "123caiji",
   "license": "MIT",
@@ -22,18 +22,19 @@
   },
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    ".": "./lib/src/index.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "src",
+    "lib",
     "cordis.patch.yml",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "tsc"
   },
   "dependencies": {},
   "devDependencies": {

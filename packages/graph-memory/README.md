@@ -183,7 +183,7 @@ graph-memory/
 | Visible plugin state | **Done** | Active in Plugin Inventory |
 | Pro visual workbench | **Not shipped** | Requires a DSH Client Plugin |
 
-Current beta: `1.6.0-beta.1`. Local acceptance used DeepSeek Harness `0.1.0-rc.5`. DSH remains in Developer Preview and may introduce compatibility-breaking changes. Testing covered tarball installation, active plugin state, 1024-dimensional vector backfill, semantic recall across Sessions, persistence across restarts, and FTS5 fallback. All 107 automated tests passed.
+Current beta: `1.6.0-beta.2`. Local acceptance used DeepSeek Harness `0.1.0-rc.5`. DSH remains in Developer Preview and may introduce compatibility-breaking changes. Testing covered tarball installation, active plugin state, 1024-dimensional vector backfill, semantic recall across Sessions, persistence across restarts, and FTS5 fallback. All 107 automated tests passed.
 
 <p align="center">
   <strong>Plugin enabled: graph-memory/dsh is active in the DSH plugin list</strong><br>
@@ -211,12 +211,12 @@ npm pack
 Install the generated tarball into the DSH Web profile:
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add /absolute/path/to/graph-memory-1.6.0-beta.1.tgz
+npx @deepseek-ai/dsh plugin --profile web add /absolute/path/to/graph-memory-1.6.0-beta.2.tgz
 npx @deepseek-ai/dsh --profile web --dump-config
 npx @deepseek-ai/dsh web
 
 # From a deepseek-harness source checkout:
-pnpm dsh plugin --profile web add /absolute/path/to/graph-memory-1.6.0-beta.1.tgz
+pnpm dsh plugin --profile web add /absolute/path/to/graph-memory-1.6.0-beta.2.tgz
 pnpm dsh web
 ```
 

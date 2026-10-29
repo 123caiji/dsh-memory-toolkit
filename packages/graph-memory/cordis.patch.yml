@@ -2,18 +2,18 @@
     - id: graph-memory
       name: '@123caiji/dsh-graph-memory'
       config:
-        # Default database location. Override in your profile's cordis.patch.yml
-        # to point at a custom path. Uses DSH_HOME when set, otherwise ~/.dsh.
-        dbPath: !!js "require('path').join(require('os').homedir(), '.dsh', 'graph-memory', 'graph-memory.db')
+        # 数据库位置。省略时插件默认使用 ~/.dsh/graph-memory/graph-memory.db；
+        # 需要自定义时取消下一行注释并填入绝对路径。
+        # dbPath: 'D:/dsh-data/graph-memory.db'
         extractionEnabled: true
         recallEnabled: true
         recallMaxNodes: 6
         recallMaxDepth: 2
         maintenanceInterval: 6
-        # Secrets stay outside the bundle and repository. Set these variables
-        # in the environment that starts DSH to enable semantic vector recall.
-        embedding:
-          apiKeyEnv: !!js "process.env.GRAPH_MEMORY_EMBEDDING_API_KEY ? 'GRAPH_MEMORY_EMBEDDING_API_KEY' : undefined"
-          baseURL: !!js process.env.GRAPH_MEMORY_EMBEDDING_BASE_URL
-          model: !!js process.env.GRAPH_MEMORY_EMBEDDING_MODEL
-          dimensions: !!js "process.env.GRAPH_MEMORY_EMBEDDING_DIMENSIONS ? Number(process.env.GRAPH_MEMORY_EMBEDDING_DIMENSIONS) : undefined"
+        # 语义向量召回是可选项：在启动 DSH 的环境里设置 GRAPH_MEMORY_EMBEDDING_*，
+        # 然后取消下面这段注释。不配置时自动退化为 SQLite FTS5 关键词召回。
+        # embedding:
+        #   apiKeyEnv: GRAPH_MEMORY_EMBEDDING_API_KEY   # 环境变量名，不是密钥本身
+        #   baseURL: https://api.openai.com/v1
+        #   model: text-embedding-3-small
+        #   dimensions: 1536

@@ -11,7 +11,8 @@
         convergence:
           enabled: false      # MCP schema 收敛（需配置 servers）
           servers: []
-          cachePath: !!js "dshHomePath('lean-context/mcp-catalog.json')"
+          # cachePath 省略时不做磁盘缓存；需要时填绝对路径
+          # cachePath: 'D:/dsh-data/lean-context/mcp-catalog.json'
           searchLimitDefault: 5
           searchLimitMax: 10
           allowTools: []      # fail-closed；形如 "server/tool" 的 glob
