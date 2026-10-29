@@ -42,50 +42,55 @@ export function applyAudit(ctx: AuditContext, config: AuditConfig): () => void {
       'Audit the token cost of injected context: instruction chain (AGENTS.md), skill catalogues, and tool schemas. ' +
       'Read-only — never mutates files. Reports per-file bytes, approximate tokens, duplicates and shadowed skills.',
     parameters: {
-      cwd: { type: 'string', description: 'Workspace root to audit. Defaults to process.cwd().' },
-      includeSkillBodies: {
-        type: 'boolean',
-        description: 'When true, read SKILL.md bodies for duplicate-text detection. Defaults to true.',
+      type: 'object',
+      properties: {
+        cwd: { type: 'string', description: 'Workspace root to audit. Defaults to process.cwd().' },
+        includeSkillBodies: {
+          type: 'boolean',
+          description: 'When true, read SKILL.md bodies for duplicate-text detection. Defaults to true.',
+        },
+        maxSkillBodies: {
+          type: 'integer',
+          description: 'Maximum number of skill bodies to scan (controls cost). Defaults to 50.',
+        },
       },
-      maxSkillBodies: {
-        type: 'integer',
-        description: 'Maximum number of skill bodies to scan (controls cost). Defaults to 50.',
-      },
+      additionalProperties: false,
     },
     output: {
       schema: {
         type: 'object',
         additionalProperties: false,
+        required: ['files', 'totalBytes', 'totalApproxTokens', 'duplicates', 'generatedAt'],
         properties: {
           files: {
             type: 'array',
-            required: true,
             items: {
               type: 'object',
               additionalProperties: false,
+              required: ['path', 'bytes', 'approxTokens'],
               properties: {
-                path: { type: 'string', required: true },
-                bytes: { type: 'integer', required: true },
-                approxTokens: { type: 'integer', required: true },
+                path: { type: 'string' },
+                bytes: { type: 'integer' },
+                approxTokens: { type: 'integer' },
               },
             },
           },
-          totalBytes: { type: 'integer', required: true },
-          totalApproxTokens: { type: 'integer', required: true },
+          totalBytes: { type: 'integer' },
+          totalApproxTokens: { type: 'integer' },
           duplicates: {
             type: 'array',
-            required: true,
             items: {
               type: 'object',
               additionalProperties: false,
+              required: ['hash', 'files', 'bytes'],
               properties: {
-                hash: { type: 'string', required: true },
-                files: { type: 'array', required: true, items: { type: 'string' } },
-                bytes: { type: 'integer', required: true },
+                hash: { type: 'string' },
+                files: { type: 'array', items: { type: 'string' } },
+                bytes: { type: 'integer' },
               },
             },
           },
-          generatedAt: { type: 'string', required: true },
+          generatedAt: { type: 'string' },
         },
       },
       render: (result: AuditReport) => renderAudit(result),

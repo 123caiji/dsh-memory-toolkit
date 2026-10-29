@@ -7,10 +7,17 @@ import { createHash } from 'node:crypto'
 import { DatabaseSync, type DatabaseSyncInstance } from '@photostructure/sqlite'
 import { mkdirSync } from 'fs'
 import { homedir } from 'os'
+import { join } from 'path'
 
 let _db: DatabaseSyncInstance | null = null
 
 export function resolvePath(p: string): string {
+  // DSH 可以用 DSH_HOME 重定位家目录；默认库路径里的 ~/.dsh 必须跟着走，
+  // 否则把 DSH_HOME 指到别处的用户会在真实用户目录里留下一个库。
+  const dshHome = process.env.DSH_HOME?.trim()
+  if (dshHome && p.startsWith('~/.dsh/')) {
+    return join(dshHome, p.slice('~/.dsh/'.length))
+  }
   return p.replace(/^~/, homedir())
 }
 

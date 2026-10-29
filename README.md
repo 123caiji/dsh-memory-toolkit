@@ -154,6 +154,8 @@ dsh plugin --profile web add ./packages/lean-context
 
 ```bash
 dsh plugin --profile web list    # 确认 graph-memory 和 lean-context 处于 active 状态
+
+> graph-memory 的数据库默认放在 `$DSH_HOME/graph-memory/graph-memory.db`；没有设置 `DSH_HOME` 时是 `~/.dsh/graph-memory/graph-memory.db`。需要换位置时在 `cordis.patch.yml` 里填 `dbPath`。
 dsh doctor                       # 诊断插件加载错误
 ```
 ```
@@ -391,6 +393,7 @@ context_audit(cwd=".")
 |---|---|---|
 | `Cannot find module '@photostructure/sqlite'` | native binding 未编译 | `pnpm install` 时确认 allowBuilds 包含该包 |
 | `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING` | 入口是 `.ts`，而 Node 24 不会在 `node_modules` 里剥离类型 | 拉取最新提交（入口已改为 `dist/dsh.js` / `lib/src/index.js`）后重新安装 |
+| `JsonSchemaError: unsupported JSON schema: ...` | 工具 schema 用了 DSH 强制子集不支持的写法（如把 `required: true` 写在数组/字符串节点的属性上） | 已在 1.6.0-beta.2 / 0.1.0-rc.6 修复：`parameters` 与 `output.schema` 都改成原生 JSON Schema，`required` 只挂在对象节点上 |
 | `YAMLException: bad indentation of a mapping entry` | 旧版 `cordis.patch.yml` 的 `!!js` 值引号未闭合 | 已修复，拉取最新提交（`!!js` 已移除） |
 | `error: required option '--profile <name>' not specified` | dsh 0.1.x 的 `plugin` 子命令必须带 profile | 命令里加 `--profile web`（或 `desktop`） |
 | `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING` | 入口是 `.ts`，而 Node 24 不会在 node_modules 里剥离类型 | 拉取最新提交（入口已改为 `dist/dsh.js` / `lib/src/index.js`）后重新安装 |
